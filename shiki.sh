@@ -1,26 +1,58 @@
 # Wikipedia in the shell
 # https://www.mediawiki.org/wiki/API:Main_page
+# https://www.mediawiki.org/wiki/Extension:TextExtracts
 # For `formatversion=1` use `sed 's/"}}}.*//'
 # Usage: `wiki unix` or `wiki -l "Ghost in the Shell"`
 # Options: -l(ong) and -s(hort)
+# Major props to konsolebox
 
 wiki() {
-  local Encodeddata=$(python -c "import urllib, sys; print urllib.quote(sys.argv[1])" "${2:-$1}")
-  case ${1} in -l|-long) # Full article
-    curl -fsSL "https://en.wikipedia.org/w/api.php?action=query&titles=${Encodeddata}&prop=extracts&exlimit=max&explaintext&format=json&formatversion=2&redirects=" | \
-    sed 's/^.*"extract":"//' | sed 's/"}\]}.*//' | sed 's/\\n/\
-    /g' | less;; # Ugly `sed` hack because `sed 's/\\n/\n/g'` doesn't work on macOS/BSD
-  -s|-simple) # Article intro, simplified
-    curl -fsSL "https://simple.wikipedia.org/w/api.php?action=query&titles=${Encodeddata}&prop=extracts&exlimit=max&exintro&explaintext&format=json&formatversion=2&redirects=" | \
-    sed 's/^.*"extract":"//' | sed 's/"}\]}.*//' | sed 's/\\n/\
-    /g' | less;;
-  -ls|-sl|-s -l|-l -s|--simple-long|--long-simple) # Full article, simplified
-    curl -fsSL "https://simple.wikipedia.org/w/api.php?action=query&titles=${Encodeddata}&prop=extracts&exlimit=max&exintro&explaintext&format=json&formatversion=2&redirects=" | \
-    sed 's/^.*"extract":"//' | sed 's/"}\]}.*//' | sed 's/\\n/\
-    /g' | less;;
-  *) # Article intro
-    curl -fsSL "https://en.wikipedia.org/w/api.php?action=query&titles=${Encodeddata}&prop=extracts&exlimit=max&exintro&explaintext&format=json&formatversion=2&redirects=" \
-    | sed 's/^.*"extract":"//' | sed 's/"}\]}.*//' | sed 's/\\n/\
-    /g' | less;;
+  local data=() encoded_data lang long_mode=false simple_mode=false url
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    -l|--long)
+      long_mode=true
+      ;;
+    -s|-simple)
+      simple_mode=true
+      ;;
+    -ls|-sl|-s -l|-l -s|--simple-long|--long-simple)
+      long_mode=true
+      simple_mode=true
+      ;;
+    -*)
+      echo "Invalid option: $1"
+      return 1
+      ;;
+    --)
+      data+=("${@:2}")
+      break
+      ;;
+    *)
+      data+=("$1")
+      ;;
+    esac
+
+    shift
+  done
+
+  case ${#data[@]} in
+  0)
+    echo "Data argument needed."
+    return 1
+    ;;
+  1)
+    ;;
+  *)
+    echo "Too many data arguments passed."
+    return 1
+    ;;
   esac
+
+  encoded_data=$(python -c "import urllib, sys; print urllib.quote(sys.argv[1])" "$data") || return 1
+  if [[ $simple_mode == true ]]; then lang="simple"; else lang="en"; fi;
+  url="https://${lang}.wikipedia.org/w/api.php?action=query&titles=${encoded_data}&prop=extracts&exlimit=max&explaintext&format=json&formatversion=2&redirects="
+  [[ $long_mode == true ]] || url+="&exintro"
+  curl -fsSL "$url" | sed 's/^.*"extract":"//; s/"}\]}.*//; s/\\n/\'$'\n''/g' | less
 }

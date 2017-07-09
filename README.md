@@ -14,16 +14,16 @@ Furthermore `shiki` has some useful options. These are:
 * `--simple/-s`: requests the simple article. This is especially handy if you want a quick understanding of something!
 * `NASCAR --language fr`: requests the article in French
 
-So, if you would want to read the full article about The Netherlands in Dutch, you would `shiki -f "The Netherlands" -l nl`
+So, if you would want to read the full article about 'The Netherlands' in 'Dutch', you would `shiki -f "The Netherlands" -l nl`
 
 Note that 'simple' is a Wikipedia language, and thus can't be combined with the `--language` option.
 
 ## Installation
 
-Copy the code into your '.bash_profile', '.zshrc' or '.functions'.
+Copy the code into your '.bash_profile', '.zshrc' or '.functions'.  
 Another (cleaner) way is to clone this repository and add `source "${HOME}/shiki/shiki.sh"` to one of the aforementioned files.
 
-## Thanks to…
+## With help from…
 
 [Konsolebox](git.io/konsolebox)  
 [#bash](http://webchat.freenode.net/?channels=bash) on freenode

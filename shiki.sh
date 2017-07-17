@@ -77,5 +77,5 @@ shiki() {
   # For `formatversion=1` use `sed 's/"}}}.*//'`
   # Literal newline `sed` hack for POSIX compatibility
   curl -fsSL "${url}" | sed 's/^.*"extract":"//; s/"}\]}.*//; s/\\n/\
-/g' | less # Pipe into `less` for cleaner article browsing
+/g' | fmt -w "$(tput cols)" | less -m +Gg # Pipe into `less` for cleaner article browsing
 }

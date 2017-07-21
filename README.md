@@ -1,6 +1,6 @@
 ## Introduction
 
-![shiki in action](http://i.imgur.com/2dyywHr.png)
+![shiki in action](http://i.imgur.com/xHzSwVM.png)
 
 This is `shiki`, a neat little script that allows you to browse Wikipedia articles right in your Terminal.
 Imagine you're in the zone, don't recognize something and don't want to break your flow by tabbing to your browser: Shiki has you covered!

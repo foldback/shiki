@@ -1,6 +1,6 @@
 # Wikipedia in the shell
 # © Jorrit Visser <git.io/jorvi>
-# Major props to konsolebox <https://git.io/konsolebox>
+# Major props to konsolebox <git.io/konsolebox>
 
 # Usage: `shiki unix`, `shiki -f "Ghost in the Shell" --language fr`
 # Options: `-s/--simple`, `-f/--full` and `$article -l/--language`

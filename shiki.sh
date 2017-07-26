@@ -57,7 +57,7 @@ shiki() {
   fi
 
   # URL-encode article string
-  encoded_article="$(python -c "import urllib, sys; print urllib.quote(sys.argv[1])" "${article}")" || return 1
+  encoded_article="$(python2 -c "import urllib, sys; print urllib.quote(sys.argv[1])" "${article}")" || return 1
 
   if [ -n "${lang}" ] && [ "${simple_mode}" = true ]; then
     printf "'--simple' and '--language' can't be used together!\n" # 'simple' is considered a language
